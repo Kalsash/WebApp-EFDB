@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 using System.Net.Mail;
@@ -6,19 +6,12 @@ using System.Net;
 
 namespace WebApp_Landing.Pages
 {
-    public class PrivacyModel : PageModel
+    public class AboutModel : PageModel
     {
-        private readonly ILogger<PrivacyModel> _logger;
-
         [BindProperty]
         public SubscribeModel Subscribe { get; set; }
 
         public bool ShowSuccessPopup { get; private set; }
-
-        public PrivacyModel(ILogger<PrivacyModel> logger)
-        {
-            _logger = logger;
-        }
 
         public async void OnPostSubscribeAsync()
         {
@@ -50,10 +43,8 @@ namespace WebApp_Landing.Pages
             ShowSuccessPopup = false;
             return Page();
         }
-
         public void OnGet()
         {
         }
     }
-
 }

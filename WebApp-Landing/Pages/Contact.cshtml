@@ -1,0 +1,156 @@
+﻿@page
+@using WebApp_Landing.Pages
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<!-- Main Content -->
+<section class="rounded-xl shadow-sm p-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-swamp-900 mb-2">Swamp Mail</h2>
+            <p class="text-swamp-700">Send a message that'll hop straight to our team</p>
+        </div>
+
+        <form asp-page-handler="Send" method="post" id="contactForm" class="space-y-6">
+            @Html.AntiForgeryToken()
+
+            <div>
+                <label class="block text-sm font-medium text-swamp-700 mb-1">Your Name</label>
+                <input type="text" asp-for="ContactR.Name" required class="w-full px-4 py-2 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent" placeholder="Viggo The Frogger">
+                <span asp-validation-for="ContactR.Name" class="text-red-600"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-swamp-700 mb-1">Your Email</label>
+                <input type="email" asp-for="ContactR.ContactEmail" required class="w-full px-4 py-2 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent" placeholder="croak@swamp.edu">
+                <span asp-validation-for="ContactR.ContactEmail" class="text-red-600"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-swamp-700 mb-1">Message Topic</label>
+                <select asp-for="ContactR.Topic" class="w-full px-4 py-2 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent">
+                    <option>General Question</option>
+                    <option>Bug Report</option>
+                    <option>Feature Request</option>
+                    <option>Partnership</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-swamp-700 mb-1">Your Message</label>
+                <textarea rows="5" asp-for="ContactR.Message" required class="w-full px-4 py-2 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent" placeholder="Type your message here..."></textarea>
+                <span asp-validation-for="ContactR.Message" class="text-red-600"></span>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="bg-swamp-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-swamp-600 transition-colors flex items-center justify-center space-x-2 mx-auto shadow-lg hover:shadow-swamp-200/50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Send Message</span>
+                </button>
+            </div>
+        </form>
+
+        <div asp-validation-summary="ModelOnly" class="text-red-600"></div>
+    </div>
+</section>
+@if (Model.ShowContactSuccess)
+{
+    <!-- Success Modal (Reuse your existing popup component) -->
+    <div id="contactSuccess"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100]">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 relative shadow-lg">
+            <div class="text-center">
+                <div class="mx-auto w-24 h-24 bg-swamp-100 rounded-full flex items-center justify-center mb-4">
+                    <img src="green-toad-wink.svg" alt="The toad approves" class=" w-16 h-16">
+                </div>
+                <h3 class="text-xl font-bold text-swamp-900 mb-2">Message Sent!</h3>
+                <p class="text-swamp-700">
+                    We'll hop to it! Expect a response within 24-48 hours.
+                </p>
+                <form method="post" asp-page-handler="CloseContact">
+                <button onclick="closeContactSuccess()"
+                        class="mt-6 bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600 transition-colors">
+                    Ribbitastic!
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+<!-- Footer -->
+<footer class="bg-swamp-900 text-white">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <img src="green-toad-logo.svg" alt="Greenswamp Logo" class="h-8 w-8">
+                    <span class="text-xl font-bold">Greenswamp</span>
+                </div>
+                <p class="mt-4 text-sm text-swamp-300">
+                    Connecting people one ribbit at a time.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-sm font-semibold">Company</h4>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/About">About</a> </li>
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Contact">Contact</a> </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold">Legal</h4>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Privacy">Privacy</a> </li>
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Tos">Terms</a> </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold">Stay Updated</h4>
+                <form class="mt-4 flex" method="post" asp-page-handler="Subscribe">
+                    <input type="email"
+                           asp-for="Subscribe.Email"
+                           id="subscribeEmail"
+                           placeholder="Enter your email"
+                           required
+                           class="px-4 py-2 rounded-l-full flex-1 text-swamp-900 border border-swamp-200 focus:ring-2 focus:ring-swamp-400 focus:border-transparent">
+                    <button type="submit"
+                            class="bg-swamp-500 px-6 py-2 rounded-r-full hover:bg-swamp-600 transition-colors text-white">
+                        Subscribe
+                    </button>
+                </form>
+                @if (Model.ShowSuccessPopup)
+                {
+                    <div id="subscribePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100]">
+                        <div class="bg-white rounded-xl max-w-md w-full p-6 relative shadow-lg">
+                            <div class="text-center">
+                                <div class="mx-auto w-24 h-24 bg-swamp-100 rounded-full flex items-center justify-center mb-4">
+                                    <img src="green-toad-wink.svg" alt="The toad approves" class="w-16 h-16">
+                                </div>
+                                <h3 class="text-xl font-bold text-swamp-900 mb-2">You're In the Pond!</h3>
+                                <p class="text-swamp-700">
+                                    Thanks for hopping on board! Check your inbox for
+                                    <span class="italic">swamp updates</span>.
+                                </p>
+                                <form method="post" asp-page-handler="ClosePopup">
+                                    <button type="submit"
+                                            class="mt-6 bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600 transition-colors">
+                                        Ribbitastic!
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</footer>
+

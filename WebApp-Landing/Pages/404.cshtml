@@ -1,0 +1,97 @@
+﻿@page
+@using WebApp_Landing.Pages
+@model _404Model
+@{
+    ViewData["Title"] = "Error 404";
+}
+
+<!-- Main Content -->
+<div class="bg-swamp-900 relative h-[500px]">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+        <img src="shrek.jpg" alt="Lonely toilet" class="w-full h-full object-cover object-center">
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 h-full flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
+                404 Not Found
+            </h1>
+            <p class="mt-4 max-w-md mx-auto text-lg text-swamp-300 sm:text-xl md:mt-6 md:max-w-2xl">
+                What are you doing in my swamp!?
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-swamp-900 text-white">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <img src="green-toad-logo.svg" alt="Greenswamp Logo" class="h-8 w-8">
+                    <span class="text-xl font-bold">Greenswamp</span>
+                </div>
+                <p class="mt-4 text-sm text-swamp-300">
+                    Connecting people one ribbit at a time.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-sm font-semibold">Company</h4>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/About">About</a> </li>
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Contact">Contact</a> </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold">Legal</h4>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Privacy">Privacy</a> </li>
+                        <li><a class="text-swamp-300 hover:text-white" asp-area="" asp-page="/Tos">Terms</a> </li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold">Stay Updated</h4>
+                <form class="mt-4 flex" method="post" asp-page-handler="Subscribe">
+                    <input type="email"
+                           asp-for="Subscribe.Email"
+                           id="subscribeEmail"
+                           placeholder="Enter your email"
+                           required
+                           class="px-4 py-2 rounded-l-full flex-1 text-swamp-900 border border-swamp-200 focus:ring-2 focus:ring-swamp-400 focus:border-transparent">
+                    <button type="submit"
+                            class="bg-swamp-500 px-6 py-2 rounded-r-full hover:bg-swamp-600 transition-colors text-white">
+                        Subscribe
+                    </button>
+                </form>
+                @if (Model.ShowSuccessPopup)
+                {
+                    <div id="subscribePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100]">
+                        <div class="bg-white rounded-xl max-w-md w-full p-6 relative shadow-lg">
+                            <div class="text-center">
+                                <div class="mx-auto w-24 h-24 bg-swamp-100 rounded-full flex items-center justify-center mb-4">
+                                    <img src="green-toad-wink.svg" alt="The toad approves" class="w-16 h-16">
+                                </div>
+                                <h3 class="text-xl font-bold text-swamp-900 mb-2">You're In the Pond!</h3>
+                                <p class="text-swamp-700">
+                                    Thanks for hopping on board! Check your inbox for
+                                    <span class="italic">swamp updates</span>.
+                                </p>
+                                <form method="post" asp-page-handler="ClosePopup">
+                                    <button type="submit"
+                                            class="mt-6 bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600 transition-colors">
+                                        Ribbitastic!
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</footer>

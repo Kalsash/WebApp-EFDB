@@ -1,6 +1,7 @@
 using Microsoft.Extensions.FileProviders;
 using WebApp_Feed;
 using WebApp_Landing;
+using Serilog;
 
 namespace WebApp_EFDB
 {
@@ -26,9 +27,19 @@ namespace WebApp_EFDB
             // Add Feed Controllers
             builder.Services.AddFeedControllers();
             builder.Services.AddFeedDatabase(builder.Configuration.GetConnectionString("SQLiteConnection"));
+            builder.Services.AddScoped<ICsvHelperService, CsvHelperService>();
 
             // Add Landing Pages
             builder.Services.AddLandingPages();
+
+            // Настройка Serilog
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()  // Поставил минимальный уровень логирования
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            builder.Host.UseSerilog(); //Serilog для логирования
 
 
 
@@ -55,6 +66,23 @@ namespace WebApp_EFDB
                     areaName: "Feed",
                     pattern: "/Feed/{controller=Home}/{action=Index}/{id?}");
 
+            });
+            // Middleware для логирования запросов
+            app.Use(async (context, next) =>
+            {
+                Log.Information("Request: {Method} {Path}", context.Request.Method, context.Request.Path);
+                await next.Invoke(); // Переход к следующему middleware
+                Log.Information("Response: {StatusCode} для {Method} {Path}", context.Response.StatusCode, context.Request.Method, context.Request.Path);
+            });
+
+            // Обработчик для 404 ошибок
+            app.UseStatusCodePages(context =>
+            {
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+                {
+                    context.HttpContext.Response.Redirect("/404");
+                }
+                return Task.CompletedTask;
             });
 
             app.Run();

@@ -3,48 +3,121 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApp_Landing</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApp_Landing.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Lab3_ServerProg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        swamp: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+@*     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script> *@
+    <style>
+        #mobile-menu {
+            transition: all 0.3s ease-out;
+            transform-origin: top;
+        }
+
+            #mobile-menu.hidden {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+
+            #mobile-menu.block {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">WebApp_Landing</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Feed" asp-controller="Home">Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<body class="bg-swamp-50">
+        <!-- Navigation -->
+        <nav class="bg-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <a class="flex items-center space-x-2" asp-area="" asp-page="/Index">
+                        <img src="green-toad-logo.svg" alt="Greenswamp Logo" class="h-8 w-8">
+                        <span class="text-2xl font-bold text-swamp-600">Greenswamp</span>
+                    </a>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex space-x-8">
+                        <a class="my-auto text-swamp-600 hover:text-swamp-800 font-medium" asp-area="" asp-page="/Index">Home</a>
+                        <a class="my-auto text-swamp-600 hover:text-swamp-800 font-medium" asp-area="" asp-page="/About">About</a> 
+                        <a class="my-auto text-swamp-600 hover:text-swamp-800 font-medium" asp-area="" asp-page="/Contact">Contact</a>
+                        <a class="my-auto text-swamp-600 hover:text-swamp-800 font-medium" asp-area="" asp-page="/Privacy">Privacy</a>
+                        <a class="my-auto text-swamp-600 hover:text-swamp-800 font-medium" asp-area="" asp-page="/Tos">Terms</a>
+                        <button class="bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600">New Ribbit</button>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-button" class="md:hidden text-swamp-600 hover:text-swamp-800">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden absolute w-full bg-white shadow-lg">
+                <div class="px-4 py-2 space-y-4">
+                    <a href="#" class="text-swamp-600 hover:text-swamp-800 font-medium">Swamp</a>
+                    <a href="#" class="text-swamp-600 hover:text-swamp-800 font-medium">Ponds</a>
+                    <a href="#" class="text-swamp-600 hover:text-swamp-800 font-medium">Fireflies</a>
+                    <button class="w-full bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600">New Ribbit</button>
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - WebApp_Landing - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+        <script>
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+            mobileMenuButton.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                if(isHidden) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('block');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('block');
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (event) => {
+                if(!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('block');
+                }
+            });
+        </script>
+
+    @RenderBody()
+@*     @{
+        var footerModel = new Lab3_ServerProg.Pages.Shared.FooterModel();
+    }
+    @await Html.PartialAsync("Footer", footerModel) *@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -8,9 +8,9 @@ namespace WebApp_Landing
         public static IServiceCollection AddLandingPages(this IServiceCollection services)
         {
             services.AddRazorPages()
-                .AddApplicationPart(typeof(Pages.Pages_Index).Assembly)
-                .AddApplicationPart(typeof(Pages.Pages_Error).Assembly)
-                .AddApplicationPart(typeof(Pages.Pages_Privacy).Assembly) 
+                .AddApplicationPart(typeof(Pages.IndexModel).Assembly)
+                .AddApplicationPart(typeof(Pages.ErrorModel).Assembly)
+                .AddApplicationPart(typeof(Pages.PrivacyModel).Assembly) 
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AddAreaFolderRouteModelConvention("Landing", "/", model =>
