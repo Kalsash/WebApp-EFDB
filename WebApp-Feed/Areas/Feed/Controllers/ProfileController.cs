@@ -14,9 +14,10 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             _context = context;
         }
 
-        [Route("profile/{username}")]
+         [Route("profile/{username}")]
         public IActionResult Index(string username)
         {
+           
             var user = _context.Users
                 .Include(u => u.Posts)
                     .ThenInclude(p => p.Tags)
@@ -32,5 +33,6 @@ namespace WebApp_Feed.Areas.Feed.Controllers
 
             return View(user);
         }
+
     }
 }

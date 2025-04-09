@@ -170,6 +170,15 @@ namespace WebApp_EFDB
                     pattern: "/Feed/{controller=Home}/{action=Index}/{id?}");
 
             });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //    // Добавьте следующие строки для поддержки областей:
+            //    endpoints.MapAreaControllerRoute(
+            //        name: "feed_area",
+            //        areaName: "Feed",
+            //        pattern: "Feed/{controller=Profile}/{action=Index}/{id?}");
+            //});
             // Middleware для логирования запросов
             app.Use(async (context, next) =>
             {
