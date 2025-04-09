@@ -20,7 +20,7 @@ namespace WebApp_Feed.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Profile()
         {
             return View();
         }
