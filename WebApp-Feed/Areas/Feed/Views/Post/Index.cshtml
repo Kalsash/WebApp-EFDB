@@ -2,7 +2,40 @@
 @{
     ViewData["Title"] = "Post";
 }
+@functions {
+    public DateTime ConvertByteArrayToDateTime(byte[] byteArray)
+    {
+        if (byteArray == null || byteArray.Length != 8)
+        {
+            throw new ArgumentException("Byte array must be 8 bytes long.");
+        }
 
+        long dateTimeBinary = BitConverter.ToInt64(byteArray, 0);
+        return DateTime.FromBinary(dateTimeBinary);
+    }
+
+    public string GetTimeAgo(DateTime postDate)
+    {
+        var timeDifference = DateTime.Now - postDate;
+
+        if (timeDifference.TotalMinutes < 1)
+        {
+            return "Just now";
+        }
+        else if (timeDifference.TotalMinutes < 60)
+        {
+            return $"{(int)timeDifference.TotalMinutes} minute{(timeDifference.TotalMinutes > 1 ? "s" : "")} ago";
+        }
+        else if (timeDifference.TotalHours < 24)
+        {
+            return $"{(int)timeDifference.TotalHours} hour{(timeDifference.TotalHours > 1 ? "s" : "")} ago";
+        }
+        else
+        {
+            return $"{(int)timeDifference.TotalDays} day{(timeDifference.TotalDays > 1 ? "s" : "")} ago";
+        }
+    }
+}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Main Post -->
     <div class="bg-white shadow-sm p-6 mb-6">
@@ -15,6 +48,7 @@
                     <span class="text-swamp-500">·</span>
                     <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">
                      @*    @((DateTime.Now - Model.CreatedAt).Humanize()) *@
+                        @GetTimeAgo(ConvertByteArrayToDateTime(@Model.CreatedAt))
                     </a>
                 </div>
                 <p class="mt-2 text-swamp-700">
