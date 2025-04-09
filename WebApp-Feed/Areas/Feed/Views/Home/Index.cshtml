@@ -111,7 +111,7 @@
                         </div>
                         <div class="flex-1">
                             <h4 class="font-semibold text-swamp-900">@eventItem.HostOrg</h4>
-                         @*    <p class="mt-2 text-swamp-700">Date: @eventItem.EventTime.ToString("g")</p> *@
+                            <p class="mt-2 text-swamp-700">Event Time: @ConvertByteArrayToDateTime(eventItem.EventTime).ToString("g")</p>
                             <p class="text-sm text-swamp-500">Location: @eventItem.Location</p>
                             <div class="mt-4 flex items-center space-x-4">
                                 <button class="bg-swamp-500 text-white px-4 py-2 rounded-full text-sm hover:bg-swamp-600">RSVP</button>
