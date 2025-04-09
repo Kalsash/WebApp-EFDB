@@ -1,0 +1,104 @@
+﻿@model Post
+@{
+    ViewData["Title"] = "Post";
+}
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Main Post -->
+    <div class="bg-white shadow-sm p-6 mb-6">
+        <div class="flex items-start space-x-3">
+            <img src="@Model.User.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
+            <div class="flex-1">
+                <div class="flex items-center space-x-2">
+                    <h4 class="font-semibold text-swamp-900">@Model.User.DisplayName</h4>
+                    <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">@@@Model.User.Username</a>
+                    <span class="text-swamp-500">·</span>
+                    <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">
+                     @*    @((DateTime.Now - Model.CreatedAt).Humanize()) *@
+                    </a>
+                </div>
+                <p class="mt-2 text-swamp-700">
+                    @Model.Content
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <a href="#" class="text-swamp-700 hover:text-swamp-500">#@tag.TagName</a>
+                    }
+                </p>
+
+                @if (!string.IsNullOrEmpty(Model.MediaUrl))
+                {
+                    @if (Model.MediaType == "image")
+                    {
+                        <img class="mt-2 p-1 rounded-xl" src="@Model.MediaUrl" alt="@Model.AltText" />
+                    }
+                    else if (Model.MediaType == "video")
+                    {
+                        <video class="w-full aspect-video object-cover bg-slate-900"
+                               poster="@Model.ThumbnailUrl"
+                               controls preload="metadata"
+                               title="@Model.AltText">
+                            <source src="@Model.MediaUrl" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    }
+                }
+
+                <div class="mt-4 flex items-center space-x-6 text-swamp-500">
+                    <button class="flex items-center space-x-2 hover:text-swamp-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- ... иконка комментариев ... -->
+                        </svg>
+                        <span>@Model.Interactions.Count(i => i.InteractionType == "comment") Answers</span>
+                    </button>
+                    <button class="flex items-center space-x-2 hover:text-swamp-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <!-- ... иконка репостов ... -->
+                        </svg>
+                        <span>@Model.Interactions.Count(i => i.InteractionType == "reribb") Reribbs</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments/Replies -->
+    @if (Model.InverseParentPost.Any())
+    {
+        <h3 class="text-lg font-semibold text-swamp-900 mb-4">Replies</h3>
+        <div class="space-y-4">
+            @foreach (var reply in Model.InverseParentPost)
+            {
+                <div class="bg-white shadow-sm p-4">
+                    <div class="flex items-start space-x-3">
+                        <img src="@reply.User.AvatarUrl" alt="User" class="w-12 h-12 rounded-full">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-medium text-swamp-900">@reply.User.DisplayName</h4>
+                                <span class="text-swamp-500">·</span>
+                                <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">
+                               @*      @((DateTime.Now - reply.CreatedAt).Humanize()) *@
+                                </a>
+                            </div>
+                            <p class="mt-1 text-swamp-700">@reply.Content</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Reply Form -->
+    <div class="mt-8 bg-white shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-swamp-900 mb-4">Add your reply</h3>
+        <form asp-action="AddReply" asp-controller="Post" method="post">
+            <input type="hidden" name="parentPostId" value="@Model.PostId" />
+            <textarea name="content" class="w-full p-4 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent"
+                      rows="3" placeholder="Write your reply..."></textarea>
+            <div class="mt-4 flex justify-end">
+                <button type="submit" class="bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600">
+                    Post Reply
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

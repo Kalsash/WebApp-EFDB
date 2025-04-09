@@ -1,0 +1,124 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-0 lg:divide-x sm:divide-y lg:h-[calc(100vb-4rem)]">
+        <!-- Left Sidebar -->
+        <div class="lg:col-span-1 bg-white">
+            <!-- ... существующий код ... -->
+        </div>
+
+        <!-- Main Feed -->
+        <div class="lg:col-span-2 divide-y bg-white">
+            <!-- Profile Header -->
+            <div class="relative overflow-hidden">
+                <!-- Banner -->
+                <div class="h-48 bg-swamp-800 relative">
+                    <div class="absolute inset-0 bg-gradient-to-b from-swamp-600 to-swamp-200"></div>
+                    <!-- Avatar Container -->
+                    <div class="absolute -bottom-12 left-6 z-9">
+                        <div class="w-32 h-32 rounded-full border-4 border-swamp-600 bg-swamp-800 overflow-hidden shadow-xl">
+                            <img src="@Model.AvatarUrl" class="w-full h-full object-cover" alt="Profile avatar">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="pt-20 pb-6 px-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-swamp-900">@Model.DisplayName</h1>
+                            <p class="text-swamp-500">@@@Model.Username</p>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="mt-4 flex gap-6 text-swamp-700">
+                        <div><span class="text-swamp-400 font-medium">@Model.Posts.Count</span> Posts</div>
+                        <div><span class="text-swamp-400 font-medium">@Model.Interactions.Count</span> Interactions</div>
+                    </div>
+
+                    <!-- Bio -->
+                    <p class="mt-4 text-swamp-700 leading-relaxed">
+                        @Model.Bio
+                    </p>
+                </div>
+
+                <!-- Content Tabs -->
+                <div class="flex gap-4 items-center">
+                    <button class="p-2 pl-4 pr-4 text-swamp-700 border-b-2 border-swamp-500">Ribbits</button>
+                    <button class="p-2 pl-4 pr-4 text-swamp-500 hover:text-swamp-700">Ponds</button>
+                </div>
+            </div>
+
+            <!-- Post Feed -->
+            <div class="space-y-6">
+                @foreach (var post in Model.Posts.OrderByDescending(p => p.CreatedAt))
+                {
+                    <div class="bg-white shadow-sm p-6">
+                        <div class="flex items-start space-x-3">
+                            <img src="@Model.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <h4 class="font-semibold text-swamp-900">@Model.DisplayName</h4>
+                                    <span class="text-swamp-500">·</span>
+                                    <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">
+                                        @* @((DateTime.Now - post.CreatedAt).Humanize()) *@
+                                    </a>
+                                </div>
+                                <p class="mt-2 text-swamp-700">
+                                    @post.Content
+                                    @foreach (var tag in post.Tags)
+                                    {
+                                        <span class="text-swamp-700 hover:text-swamp-500">#@tag.TagName</span>
+                                    }
+                                </p>
+
+                                @if (!string.IsNullOrEmpty(post.MediaUrl))
+                                {
+                                    @if (post.MediaType == "image")
+                                    {
+                                        <img class="mt-2 p-1 rounded-xl" src="@post.MediaUrl" alt="@post.AltText" />
+                                    }
+                                    else if (post.MediaType == "video")
+                                    {
+                                        <video class="w-full aspect-video object-cover bg-slate-900"
+                                               poster="@post.ThumbnailUrl"
+                                               controls preload="metadata"
+                                               title="@post.AltText">
+                                            <source src="@post.MediaUrl" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    }
+                                }
+
+                                <div class="mt-4 flex items-center space-x-6 text-swamp-500">
+                                    <a asp-controller="Post" asp-action="Index" asp-route-postId="@post.PostId"
+                                       class="flex items-center space-x-2 hover:text-swamp-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <!-- ... иконка комментариев ... -->
+                                        </svg>
+                                        <span>@post.Interactions.Count(i => i.InteractionType == "comment") Answers</span>
+                                    </a>
+                                    <button class="flex items-center space-x-2 hover:text-swamp-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <!-- ... иконка репостов ... -->
+                                        </svg>
+                                        <span>@post.Interactions.Count(i => i.InteractionType == "reribb") Reribbs</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="lg:col-span-1 bg-white invisible lg:visible">
+            <!-- ... существующий код ... -->
+        </div>
+    </div>
+</div>
