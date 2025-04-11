@@ -37,6 +37,11 @@
             return $"{(int)timeDifference.TotalDays} day{(timeDifference.TotalDays > 1 ? "s" : "")} ago";
         }
     }
+
+    public string GetEnglishMonthAbbreviation(DateTime date)
+    {
+        return date.ToString("MMM", System.Globalization.CultureInfo.InvariantCulture).ToUpper();
+    }
 }
 
 <!-- Main Feed Container -->
@@ -158,16 +163,19 @@
             <div class="p-6 pb-0">
                 <h3 class="text-lg font-semibold text-swamp-900 mb-4">Upcoming Events</h3>
                 <div class="space-y-4">
-                    @foreach (var eventItem in Model.Events)
+                    @foreach (var eventItem in Model.Events
+                    .OrderBy(e => ConvertByteArrayToDateTime(e.EventTime))
+                    .Take(2))
                     {
                         <div class="flex items-start space-x-3">
+                 
                             <div class="w-12 flex-shrink-0 text-center">
-  @*                               <div class="text-sm font-semibold text-swamp-600">@eventItem.EventTime.ToShortDateString()</div>
-                                <div class="text-2xl font-bold text-swamp-900">@eventItem.EventTime.Day</div> *@
+                                <div class="text-sm font-semibold text-swamp-600">@GetEnglishMonthAbbreviation(ConvertByteArrayToDateTime(@eventItem.EventTime))</div>
+                                <div class="text-2xl font-bold text-swamp-900">@ConvertByteArrayToDateTime(@eventItem.EventTime).Day</div>
                             </div>
                             <div>
                                 <h4 class="font-medium text-swamp-900">@eventItem.HostOrg</h4>
-                                @* <p class="text-sm text-swamp-500">Date & Time: @eventItem.EventTime.ToString("f")</p> *@
+                                <p class="text-sm text-swamp-500">@eventItem.Location in @ConvertByteArrayToDateTime(@eventItem.EventTime).Hour PM</p>
                             </div>
                         </div>
                     }
