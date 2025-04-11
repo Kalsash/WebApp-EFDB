@@ -73,7 +73,7 @@ namespace WebApp_EFDB
                 Content = "Check out this cool image!",
                 CreatedAt = DateTimeToByteArray(DateTime.UtcNow.AddMinutes(-5)),
                 MediaType = "image", // Корректное значение
-                MediaUrl = "http://example.com/image.png",
+                MediaUrl = "https://i.ytimg.com/vi/8HGGZ1JnE5Y/maxresdefault.jpg",
                 PostType = "image"
             }
         };
