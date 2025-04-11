@@ -35,6 +35,10 @@
             return $"{(int)timeDifference.TotalDays} day{(timeDifference.TotalDays > 1 ? "s" : "")} ago";
         }
     }
+    public string GetEnglishMonthAbbreviation(DateTime date)
+    {
+        return date.ToString("MMM", System.Globalization.CultureInfo.InvariantCulture).ToUpper();
+    }
 }
 <!-- Main Feed Container -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,6 +89,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <a asp-area="Feed" asp-controller="Profile" asp-action="Index" class="text-sm text-swamp-500 hover:text-swamp-700">@@@Model.Username</a>
                             </div>
                         </div>
                     </div>
@@ -173,7 +178,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <h1 class="text-2xl font-bold text-swamp-900">@Model.DisplayName</h1>
-                            <p class="text-swamp-500">@Model.Username</p>
+                            <p class="text-swamp-500">@@@Model.Username</p>
                         </div>
                         <button class="px-4 p-2 flex items-center space-x-1 bg-swamp-500 text-white rounded-full hover:bg-swamp-600 transition-all">
                             <span>Settings</span>
@@ -211,8 +216,9 @@
                             <div class="flex-1">
                                 <div class="flex items-center space-x-2">
                                     <h4 class="font-semibold text-swamp-900">@Model.DisplayName</h4>
+                                    <a asp-area="Feed" asp-controller="Profile" asp-action="Index" class="text-sm text-swamp-500 hover:text-swamp-700">@@@Model.Username</a>
                                     <span class="text-swamp-500">·</span>
-                                    <a href="#" class="text-sm text-swamp-500 hover:text-swamp-700">Posted @GetTimeAgo(ConvertByteArrayToDateTime(@post.CreatedAt))</a>
+                                    <a asp-area="Feed" asp-controller="Profile" class="text-sm text-swamp-500 hover:text-swamp-700">Posted @GetTimeAgo(ConvertByteArrayToDateTime(@post.CreatedAt))</a>
                                 </div>
                                 <p class="mt-2 text-swamp-700">
                                     @post.Content
