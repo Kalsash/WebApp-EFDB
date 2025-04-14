@@ -1,4 +1,5 @@
 ﻿@using Humanizer
+@using WebApp_Feed.Areas.Feed.Models
 @model WebApp_Feed.Models.FeedViewModel
 
 @{
@@ -67,21 +68,18 @@
         </div>
 
         <!-- Main Feed -->
-        <div class="lg:col-span-2 divide-y order-3">
+@*         <div class="lg:col-span-2 divide-y order-3">
             <!-- Post Section -->
             @foreach (var post in Model.Posts)
             {
                 <div class="bg-white shadow-sm p-6 mb-4">
                     <div class="flex items-start space-x-3">
-                    @*     <img src="https://i.pravatar.cc/100?u=dorm23_frogs@pravatar.com" alt="User" class="w-16 h-16 rounded-full"> *@
-                        @* <img src="@post.User.AvatarUrl" alt="User" class="w-16 h-16 rounded-full"> *@
                         <a href="/feed/post/@post.PostId">
                             <img src="@post.User.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
                         </a>
                         <div class="flex-1">
                             <div class="flex items-center space-x-2">
                                 <h4 class="font-semibold text-swamp-900">@post.User.DisplayName</h4>
-                              @*   <span class="text-swamp-500">@post.CreatedAt.ToShortTimeString()</span> *@
 
                                 <span class="text-swamp-500">
                                     @GetTimeAgo(ConvertByteArrayToDateTime(@post.CreatedAt))
@@ -129,8 +127,53 @@
                     </div>
                 </div>
             }
-        </div>
+        </div> *@
+        <!-- Main Feed -->
+        <div class="lg:col-span-2 divide-y order-3">
+            @foreach (var item in Model.CombinedFeed)
+            {
+                @switch (item)
+                {
+                    case Post post:
+                        <!-- Post Section -->
+                        <div class="bg-white shadow-sm p-6 mb-4">
+                            <div class="flex items-start space-x-3">
+                                <a href="/feed/post/@post.PostId">
+                                    <img src="@post.User.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
+                                </a>
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <h4 class="font-semibold text-swamp-900">@post.User.DisplayName</h4>
+                                        <span class="text-swamp-500">
+                                            @GetTimeAgo(ConvertByteArrayToDateTime(@post.CreatedAt))
+                                        </span>
+                                    </div>
+                                    <p class="mt-2 text-swamp-700">@post.Content</p>
+                                    <!-- Остальная часть поста -->
+                                </div>
+                            </div>
+                        </div>
+                        break;
 
+                    case Event eventItem:
+                        <!-- Event Section (без связанного поста) -->
+                        <div class="bg-white shadow-sm p-6 mb-4 border-l-4 border-l-swamp-400">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-10 h-10 bg-swamp-100 rounded-full flex items-center justify-center">
+                                    <svg class="text-swamp-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a7 7 0 100 14 7 7 0 000-14zm-2.5 9a.5.5 0 11-1 0 .5.5 0 011 0zm1-5.5a.5.5 0 011 0v5a.5.5 0 11-1 0v-5z" /></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-swamp-900">@eventItem.HostOrg</h4>
+                                    <p class="mt-2 text-swamp-700">Event Time: @ConvertByteArrayToDateTime(eventItem.EventTime).ToString("g")</p>
+                                    <p class="text-sm text-swamp-500">Location: @eventItem.Location</p>
+                                    <!-- Остальная часть события -->
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                }
+            }
+        </div>
         <!-- Right Sidebar -->
         <div class="lg:col-span-1 bg-white sm:order-2 order-4">
             <!-- Search-->

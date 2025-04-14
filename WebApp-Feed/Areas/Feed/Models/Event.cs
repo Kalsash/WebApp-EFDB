@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using WebApp_Feed.Areas.Feed.Models;
 
 namespace WebApp_Feed.Models;
-
-public partial class Event
+public partial class Event : IFeedItem
 {
     public long EventId { get; set; }
 
@@ -20,4 +21,6 @@ public partial class Event
     public long? MaxCapacity { get; set; }
 
     public virtual Post? Post { get; set; }
+
+    DateTime IFeedItem.CreatedAt => DateTime.FromBinary(BitConverter.ToInt64(EventTime, 0));
 }

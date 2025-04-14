@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using WebApp_Feed.Areas.Feed.Models;
 
 namespace WebApp_Feed.Models;
 
-public partial class Post
+public partial class Post :IFeedItem
 {
     public long PostId { get; set; }
 
@@ -36,4 +37,6 @@ public partial class Post
     public virtual User User { get; set; } = null!;
 
     public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+
+    DateTime IFeedItem.CreatedAt => DateTime.FromBinary(BitConverter.ToInt64(CreatedAt, 0));
 }

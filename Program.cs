@@ -97,7 +97,7 @@ namespace WebApp_EFDB
             {
                 EventId = 2,
                 PostId = 2,
-                EventTime = DateTimeToByteArray(DateTime.UtcNow.AddDays(2)),
+                EventTime = DateTimeToByteArray(DateTime.UtcNow.AddDays(-12)),
                 HostOrg = "Frog Fest",
                 Location = "Lily Pad Plaza",
                 MaxCapacity = 100,
