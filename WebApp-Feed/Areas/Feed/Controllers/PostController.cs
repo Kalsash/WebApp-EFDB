@@ -14,7 +14,7 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             _context = context;
         }
 
-        [Route("feed/post_{postId}")]
+        [Route("feed/post/{postId}")]
         public IActionResult Index(long postId)
         {
             var post = _context.Posts
