@@ -20,7 +20,6 @@ namespace WebApp_Feed.Controllers
 
         public IActionResult Index()
         {
-            // Получаем посты и события, сортируем по дате создания
             var posts = _context.Posts
                 .Include(p => p.User)
                 .Include(p => p.Tags)
@@ -29,8 +28,8 @@ namespace WebApp_Feed.Controllers
                 .ToList();
 
             var events = _context.Events
-                .Include(e => e.Post) // в случае необходимости
-                .OrderByDescending(e => e.EventTime) // или CreatedAt
+                .Include(e => e.Post) 
+                .OrderBy(e => e.EventTime) 
                 .ToList();
 
             var combinedFeed = new FeedViewModel

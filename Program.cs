@@ -35,13 +35,11 @@ namespace WebApp_EFDB
         }
         public static void SeedDatabase(GreenswampContext context)
         {
-            // Проверяем, существует ли база данных и есть ли пользователи
             if (!context.Users.Any())
             {
-                // Добавляем тестового пользователя
                 var user = new User
                 {
-                    UserId = 1, // уникальный ID
+                    UserId = 1, 
                     Username = "testuser",
                     DisplayName = "Test User",
                     Bio = "This is a test user.",
@@ -51,7 +49,6 @@ namespace WebApp_EFDB
                 context.SaveChanges();
             }
 
-            // Добавляем тестовые посты, если их нет
             if (!context.Posts.Any())
             {
                 var posts = new List<Post>
@@ -62,7 +59,7 @@ namespace WebApp_EFDB
                 UserId = 1,
                 Content = "Hello, this is my first post!",
                 CreatedAt = DateTimeToByteArray(DateTime.UtcNow),
-                MediaType = "image", // Обязательно указываем корректное значение
+                MediaType = "image",
                 MediaUrl = "https://i.pravatar.cc/100?u=dorm23_frogs@pravatar.com",
                 PostType = "text"
             },
@@ -71,8 +68,8 @@ namespace WebApp_EFDB
                 PostId = 2,
                 UserId = 1,
                 Content = "Check out this cool image!",
-                CreatedAt = DateTimeToByteArray(DateTime.UtcNow.AddMinutes(-5)),
-                MediaType = "image", // Корректное значение
+                CreatedAt = DateTimeToByteArray(DateTime.UtcNow.AddMinutes(-5).AddHours(-5).AddDays(-2)),
+                MediaType = "image", 
                 MediaUrl = "https://i.ytimg.com/vi/8HGGZ1JnE5Y/maxresdefault.jpg",
                 PostType = "image"
             }
@@ -82,7 +79,6 @@ namespace WebApp_EFDB
                 context.SaveChanges();
             }
 
-            // Добавляем тестовые события, если их нет
             if (!context.Events.Any())
             {
                 var events = new List<Event>
