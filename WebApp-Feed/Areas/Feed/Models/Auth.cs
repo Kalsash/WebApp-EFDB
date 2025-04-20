@@ -15,5 +15,10 @@ public partial class Auth
 
     public byte[]? TokenExpiry { get; set; }
 
+    // Новые поля
+    public string NormalizedUsername { get; set; }
+    public string SecurityStamp { get; set; }
+    public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+
     public virtual User User { get; set; } = null!;
 }

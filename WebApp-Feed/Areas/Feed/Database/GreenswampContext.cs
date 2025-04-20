@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WebApp_Feed.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApp_Feed.Database;
 //
@@ -54,7 +55,19 @@ public partial class GreenswampContext : DbContext
                 .HasColumnType("DATETIME")
                 .HasColumnName("token_expiry");
 
-            entity.HasOne(d => d.User).WithOne(p => p.Auth).HasForeignKey<Auth>(d => d.UserId);
+            // Добавляем новые поля для Identity
+            entity.Property(e => e.NormalizedUsername)
+                .HasColumnName("normalized_username");
+            entity.Property(e => e.SecurityStamp)
+                .HasColumnName("security_stamp");
+            entity.Property(e => e.ConcurrencyStamp)
+                .HasColumnName("concurrency_stamp")
+                .HasDefaultValueSql("NEWID()");
+
+            // entity.HasOne(d => d.User).WithOne(p => p.Auth).HasForeignKey<Auth>(d => d.UserId);
+            entity.HasOne(d => d.User).WithOne(p => p.Auth)
+                 .HasForeignKey<Auth>(d => d.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Event>(entity =>

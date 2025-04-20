@@ -17,7 +17,7 @@ public partial class User
 
     public byte[]? CreatedAt { get; set; }
 
-    public byte[]? IsActive { get; set; }
+    public bool? IsActive { get; set; }
 
     public virtual Auth? Auth { get; set; }
 

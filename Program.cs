@@ -4,6 +4,8 @@ using WebApp_Landing;
 using Serilog;
 using WebApp_Feed.Database;
 using WebApp_Feed.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using WebApp_Feed.Areas.Feed;
 
 namespace WebApp_EFDB
 {
@@ -124,6 +126,20 @@ namespace WebApp_EFDB
 
             // Add Landing Pages
             builder.Services.AddLandingPages();
+            // В конфигурации сервисов добавляем:
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                    options.SlidingExpiration = true;
+                });
+
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<AuthService>();
+
 
             // Настройка Serilog
             Log.Logger = new LoggerConfiguration()
