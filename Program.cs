@@ -6,6 +6,7 @@ using WebApp_Feed.Database;
 using WebApp_Feed.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp_Feed.Areas.Feed;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApp_EFDB
 {
@@ -41,7 +42,6 @@ namespace WebApp_EFDB
             {
                 var user = new User
                 {
-                    UserId = 1, 
                     Username = "testuser",
                     DisplayName = "Test User",
                     Bio = "This is a test user.",
@@ -126,19 +126,22 @@ namespace WebApp_EFDB
 
             // Add Landing Pages
             builder.Services.AddLandingPages();
-            // В конфигурации сервисов добавляем:
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Account/Login";
-                    options.LogoutPath = "/Account/Logout";
-                    options.AccessDeniedPath = "/Account/AccessDenied";
-                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-                    options.SlidingExpiration = true;
-                });
 
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<AuthService>();
+            builder.Services.AddIdentity<WebApp_Feed.Models.Auth, IdentityRole<long>>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+    .AddEntityFrameworkStores<GreenswampContext>()
+    .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.Cookie.Name = "GreenswampAuth";
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+            });
 
 
             // Настройка Serilog
@@ -199,8 +202,10 @@ namespace WebApp_EFDB
                 }
                 return Task.CompletedTask;
             });
+            app.UseAuthentication();
 
             app.Run();
+
         }
     }
 }

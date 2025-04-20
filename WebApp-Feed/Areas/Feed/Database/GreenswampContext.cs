@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WebApp_Feed.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WebApp_Feed.Database;
 //
 // This file was created by EF Tools:
 // Scaffold-DbContext "Data Source=../Data/Greenswamp.db" Microsoft.EntityFrameworkCore.Sqlite -Force
 //
-public partial class GreenswampContext : DbContext
+public partial class GreenswampContext : IdentityDbContext<Auth, IdentityRole<long>, long>
 {
     public GreenswampContext()
     {
@@ -37,37 +38,42 @@ public partial class GreenswampContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Auth>(entity =>
         {
-            entity.HasKey(e => e.UserId);
+            entity.ToTable("auth"); // Указываем имя таблицы в БД
 
-            entity.ToTable("auth");
+            // У IdentityUser<long> уже есть Id (тип long), поэтому UserId не нужен!
+            entity.HasKey(e => e.Id); // Используем Id вместо UserId
 
-            entity.Property(e => e.UserId)
-                .ValueGeneratedNever()
-                .HasColumnName("user_id");
+            // Настройка полей
+            entity.Property(e => e.Id)
+                .HasColumnName("user_id"); // Маппим Id на столбец user_id
+
+            entity.Property(e => e.UserName) // Обязательное поле в IdentityUser
+                .HasColumnName("username"); // Если нужно переименовать в БД
+
+            entity.Property(e => e.Email) // Обязательное поле в IdentityUser
+                .HasColumnName("email"); // Если нужно переименовать в БД
+
+            entity.Property(e => e.PasswordHash)
+                .HasColumnName("password_hash");
+
             entity.Property(e => e.LastLogin)
                 .HasColumnType("DATETIME")
                 .HasColumnName("last_login");
-            entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
-            entity.Property(e => e.ResetToken).HasColumnName("reset_token");
+
+            entity.Property(e => e.ResetToken)
+                .HasColumnName("reset_token");
+
             entity.Property(e => e.TokenExpiry)
                 .HasColumnType("DATETIME")
                 .HasColumnName("token_expiry");
 
-            // Добавляем новые поля для Identity
-            entity.Property(e => e.NormalizedUsername)
-                .HasColumnName("normalized_username");
-            entity.Property(e => e.SecurityStamp)
-                .HasColumnName("security_stamp");
-            entity.Property(e => e.ConcurrencyStamp)
-                .HasColumnName("concurrency_stamp")
-                .HasDefaultValueSql("NEWID()");
-
-            // entity.HasOne(d => d.User).WithOne(p => p.Auth).HasForeignKey<Auth>(d => d.UserId);
-            entity.HasOne(d => d.User).WithOne(p => p.Auth)
-                 .HasForeignKey<Auth>(d => d.UserId)
-                 .OnDelete(DeleteBehavior.Cascade);
+            // Связь 1:1 с User (UserId больше не нужен, используем Id)
+            entity.HasOne(d => d.User)
+                .WithOne(p => p.Auth)
+                .HasForeignKey<Auth>(d => d.Id); // Внешний ключ — это Id (а не UserId)
         });
 
         modelBuilder.Entity<Event>(entity =>
