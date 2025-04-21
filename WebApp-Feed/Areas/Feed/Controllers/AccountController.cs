@@ -49,51 +49,53 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            // Проверяем, что Username и Email не пустые
-            if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Email))
+            // Check if username or email already exists
+            if (await _userManager.FindByNameAsync(model.Username) != null)
             {
-                ModelState.AddModelError("", "Имя пользователя и Email обязательны.");
+                ModelState.AddModelError("Username", "Username is already taken.");
                 return View(model);
             }
 
-            // Проверяем, нет ли уже такого пользователя
-            var existingUser = await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Username == model.Username);
-
-            if (existingUser != null)
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                ModelState.AddModelError("Username", "Пользователь с таким именем уже существует.");
+                ModelState.AddModelError("Email", "Email is already registered.");
                 return View(model);
             }
 
-            // Создаём User
+            // First create the User entity
             var userEntity = new User
             {
                 Username = model.Username,
-                DisplayName = model.Username, // Или другое значение
-                Bio = "Новый пользователь",
-                AvatarUrl = "https://i.pravatar.cc/100"
+                DisplayName = model.Username,
+                Bio = "New user",
+                AvatarUrl = "https://i.pravatar.cc/100",
+                IsActive = true
             };
 
             _dbContext.Users.Add(userEntity);
-            await _dbContext.SaveChangesAsync(); // Получаем UserId
+            await _dbContext.SaveChangesAsync(); // This generates the UserId
 
-            // Создаём Auth (IdentityUser)
+            // Now create the Auth entity with the same ID
             var authUser = new Auth
             {
+                Id = userEntity.UserId, // Explicitly set the ID to match User.UserId
                 UserName = model.Username,
                 Email = model.Email,
-                // Id (UserId) автоматически свяжется с userEntity.UserId
+                User = userEntity // Set the navigation property
             };
 
-            // Создаём пользователя в Identity
+            // Create the user in Identity
             var result = await _userManager.CreateAsync(authUser, model.Password);
 
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(authUser, isPersistent: true);
-                return LocalRedirect(model.ReturnUrl ?? "/Feed");
+                return RedirectToAction("Index", "Home");   
             }
+
+            // If Identity creation fails, clean up the User entity we created
+            _dbContext.Users.Remove(userEntity);
+            await _dbContext.SaveChangesAsync();
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
