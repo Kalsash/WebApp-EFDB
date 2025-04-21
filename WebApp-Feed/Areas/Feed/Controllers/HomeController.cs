@@ -3,6 +3,7 @@ using System.Diagnostics;
 using WebApp_Feed.Models;
 using WebApp_Feed.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApp_Feed.Controllers
 {
@@ -11,34 +12,42 @@ namespace WebApp_Feed.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly GreenswampContext _context;
+        private readonly UserManager<Auth> _userManager;
+        private readonly SignInManager<Auth> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, GreenswampContext context)
+        public HomeController(
+            ILogger<HomeController> logger,
+            GreenswampContext context,
+            UserManager<Auth> userManager,
+            SignInManager<Auth> signInManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var posts = _context.Posts
-                .Include(p => p.User)
-                .Include(p => p.Tags)
-                .Include(p => p.Interactions)
-                .OrderByDescending(p => p.CreatedAt)
-                .ToList();
-
-            var events = _context.Events
-                .Include(e => e.Post) 
-                .OrderBy(e => e.EventTime) 
-                .ToList();
-
-            var combinedFeed = new FeedViewModel
+            var viewModel = new FeedViewModel
             {
-                Posts = posts,
-                Events = events
+                Posts = await _context.Posts
+                    .Include(p => p.User)
+                    .Include(p => p.Tags)
+                    .Include(p => p.Interactions)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync(),
+                Events = await _context.Events
+                    .Include(e => e.Post)
+                    .OrderBy(e => e.EventTime)
+                    .ToListAsync(),
+                IsAuthenticated = _signInManager.IsSignedIn(User), // Добавляем флаг аутентификации
+                CurrentUser = _signInManager.IsSignedIn(User)
+                    ? await _userManager.GetUserAsync(User)
+                    : null
             };
 
-            return View(combinedFeed);
+            return View(viewModel);
         }
 
 

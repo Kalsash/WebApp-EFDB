@@ -8,6 +8,8 @@ namespace WebApp_Feed.Models
     {
         public List<Post> Posts { get; set; } = new List<Post>();
         public List<Event> Events { get; set; } = new List<Event>();
+        public bool IsAuthenticated { get; set; }
+        public Auth CurrentUser { get; set; }
 
         public List<IFeedItem> CombinedFeed
         {

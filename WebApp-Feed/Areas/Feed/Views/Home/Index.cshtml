@@ -56,14 +56,46 @@
                     <img src="green-toad-logo.svg" alt="Greenswamp Logo" class="h-8 w-8">
                     <span class="text-2xl font-bold text-swamp-600">Greenswamp</span>
                 </div>
-                <div class="space-x-2">
-                    <a asp-area= "Feed" asp-controller="Account" asp-action="Register">
-                        <button class="bg-swamp-500 font-semibold text-white px-4 py-2 rounded-full hover:bg-swamp-600">Register</button>
-                    </a>
-                    <a asp-area= "Feed" asp-controller="Account" asp-action="Login">
-                        <button class="bg-slate-200 font-semibold text-slate-900 px-4 py-2 rounded-full hover:bg-slate-300">Login</button>
-                    </a>
-                </div>
+
+                @if (Model.IsAuthenticated)
+                {
+                    <!-- Для авторизованных пользователей -->
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="@Model.CurrentUser?.User?.AvatarUrl" class="w-10 h-10 rounded-full">
+
+                            <a asp-area="Feed"
+                               asp-controller="Profile"
+                               asp-action="Index"
+                               asp-route-username="@Model.CurrentUser?.UserName"
+                               class="font-medium text-swamp-600 hover:text-swamp-800">
+                                @Model.CurrentUser?.UserName
+                            </a>
+                        </div>
+
+                        <a asp-area="Feed" asp-controller="Account" asp-action="Logout"
+                           class="block bg-swamp-500 text-white text-center py-2 rounded-full hover:bg-swamp-600">
+                            Logout
+                        </a>
+                    </div>
+                }
+
+                else
+                {
+                    <!-- Для неавторизованных пользователей -->
+                    <div class="space-x-2">
+                        <a asp-area="Feed" asp-controller="Account" asp-action="Register">
+                            <button class="bg-swamp-500 font-semibold text-white px-4 py-2 rounded-full hover:bg-swamp-600">
+                                Register
+                            </button>
+                        </a>
+                        <a asp-area="Feed" asp-controller="Account" asp-action="Login">
+                            <button class="bg-slate-200 font-semibold text-slate-900 px-4 py-2 rounded-full hover:bg-slate-300">
+                                Login
+                            </button>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
 

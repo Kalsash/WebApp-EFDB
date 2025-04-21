@@ -127,6 +127,7 @@ namespace WebApp_EFDB
             // Add Landing Pages
             builder.Services.AddLandingPages();
 
+
             builder.Services.AddIdentity<WebApp_Feed.Models.Auth, IdentityRole<long>>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -175,6 +176,8 @@ namespace WebApp_EFDB
             app.UseLocalStaticFiles("WebApp-Landing");
 
             app.UseRouting();
+            app.UseAuthentication(); // ÄÎËÆÍÎ ÁÛÒÜ ÇÄÅÑÜ
+            app.UseAuthorization();  // Îáÿçàòåëüíî, åñëè èñïîëüçóåøü [Authorize]
 
             app.UseEndpoints(endpoints =>
             {
@@ -202,7 +205,7 @@ namespace WebApp_EFDB
                 }
                 return Task.CompletedTask;
             });
-            app.UseAuthentication();
+   
 
             app.Run();
 

@@ -32,10 +32,11 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+                var IsAuthenticated = _signInManager.IsSignedIn(User);
                 if (result.Succeeded)
-                    return LocalRedirect(model.ReturnUrl ?? "/");
+                    return RedirectToAction("Index", "Home");
             }
-
+               
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
         }
@@ -90,6 +91,7 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(authUser, isPersistent: true);
+          
                 return RedirectToAction("Index", "Home");   
             }
 
@@ -104,10 +106,10 @@ namespace WebApp_Feed.Areas.Feed.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Logout(string returnUrl = "/")
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return LocalRedirect(returnUrl);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
