@@ -329,6 +329,7 @@
 </div>
 
 <!-- Post Modal (Hidden by default) -->
+<div class="post-form">
 <div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl max-w-2xl w-full p-6">
         <div class="flex justify-between items-center mb-4">
@@ -337,7 +338,8 @@
                 ✕
             </button>
         </div>
-        <textarea class="w-full p-4 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent"
+         <form id="postForm">
+        <textarea id="postContent"  class="w-full p-4 border border-swamp-200 rounded-lg focus:ring-2 focus:ring-swamp-400 focus:border-transparent"
                   rows="4"
                   placeholder="What's hopping?"></textarea>
         <div class="mt-4 flex justify-between items-center">
@@ -346,12 +348,46 @@
                     🐸 Add Frogmoji
                 </button>
             </div>
-            <button class="bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600">
+            <button type="submit" class="bg-swamp-500 text-white px-6 py-2 rounded-full hover:bg-swamp-600">
                 Send Ribbit
             </button>
+            </form>
+            <div id="result"></div>
         </div>
     </div>
 </div>
+</div>
+@section Scripts {
+    <script>
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const content = document.getElementById('postContent').value;
+
+            try {
+                const response = await fetch('/feed/postadd', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: JSON.stringify(content)
+                });
+
+                const result = await response.text();
+                document.getElementById('result').innerHTML = response.ok
+                    ? '<p style="color:green">Пост успешно добавлен!</p>'
+                    : '<p style="color:red">Ошибка: ' + result + '</p>';
+
+                if (response.ok) {
+                    document.getElementById('postContent').value = '';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p style="color:red">Ошибка сети</p>';
+            }
+        });
+    </script>
+
+}
 
 <script>
     function openPostModal() {
