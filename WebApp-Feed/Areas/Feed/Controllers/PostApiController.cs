@@ -9,7 +9,7 @@ namespace WebApp_Feed.Areas.Feed.Controllers
     [Area("Feed")]
     [Route("api/[area]/[controller]")]
     [ApiController]
-    //[Authorize] // Только авторизованные
+    [Authorize] // Только авторизованные
     public class PostApiController : ControllerBase
     {
         private readonly GreenswampContext _context;
@@ -28,16 +28,16 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             if (string.IsNullOrWhiteSpace(content))
                 return BadRequest("Текст поста не может быть пустым");
 
-            //var user = await _userManager.GetUserAsync(User);
-            //if (user == null)
-            //    return Unauthorized();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
 
             var post = new Post
             {
                 Content = content,
                 CreatedAt = BitConverter.GetBytes(DateTime.UtcNow.ToBinary()),
                 PostType = "post",
-                UserId = 1
+                UserId = user.Id
             };
 
             _context.Posts.Add(post);
