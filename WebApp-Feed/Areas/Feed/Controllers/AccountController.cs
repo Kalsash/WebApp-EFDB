@@ -26,13 +26,14 @@ namespace WebApp_Feed.Areas.Feed.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+           // if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.FindByNameAsync(model.Username);
+          //  var user = await _userManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-                var IsAuthenticated = _signInManager.IsSignedIn(User);
+          
                 if (result.Succeeded)
                     return RedirectToAction("Index", "Home");
             }
