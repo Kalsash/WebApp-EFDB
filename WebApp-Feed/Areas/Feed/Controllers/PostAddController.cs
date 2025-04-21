@@ -8,27 +8,27 @@ namespace WebApp_Feed.Areas.Feed.Controllers
 {
     [Area("Feed")]
     [Authorize] // ← Только авторизованные
-    public class PostApiController : Controller
+    public class PostAddController : Controller
     {
         private readonly GreenswampContext _context;
         private readonly UserManager<Auth> _userManager;
 
-        public PostApiController(GreenswampContext context, UserManager<Auth> userManager)
+        public PostAddController(GreenswampContext context, UserManager<Auth> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        // GET: /feed/postapi
+        // GET: /feed/postadd
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST: /api/feed/postapi
+        // POST: //feed/postadd
         [HttpPost]
-        [Route("api/feed/postapi")]
+        [Route("/feed/postadd")]
         public async Task<IActionResult> Post([FromBody] string content)
         {
             if (string.IsNullOrWhiteSpace(content))
