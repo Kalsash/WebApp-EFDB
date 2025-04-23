@@ -11,6 +11,8 @@ namespace WebApp_Feed.Models
         public bool IsAuthenticated { get; set; }
         public Auth CurrentUser { get; set; }
 
+        public List<Tag> TrendingTags { get; set; }
+
         public List<IFeedItem> CombinedFeed
         {
             get

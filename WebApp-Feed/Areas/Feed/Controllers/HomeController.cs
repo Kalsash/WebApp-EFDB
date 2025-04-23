@@ -29,6 +29,7 @@ namespace WebApp_Feed.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Получаем посты и события, как раньше
             var viewModel = new FeedViewModel
             {
                 Posts = await _context.Posts
@@ -41,20 +42,32 @@ namespace WebApp_Feed.Controllers
                     .Include(e => e.Post)
                     .OrderBy(e => e.EventTime)
                     .ToListAsync(),
-                IsAuthenticated = _signInManager.IsSignedIn(User), // Добавляем флаг аутентификации
+                IsAuthenticated = _signInManager.IsSignedIn(User),
                 CurrentUser = _signInManager.IsSignedIn(User)
                     ? await _userManager.GetUserAsync(User)
-                    : null
+                    : null,
+                TrendingTags = await _context.Tags
+                    .OrderByDescending(t => t.UsageCount)
+                    .Take(2)
+                    .ToListAsync()
             };
 
             return View(viewModel);
         }
 
+        [HttpGet("/Ponds/Posts/{tag}")]
+        public async Task<IActionResult> Posts(string tag)
+        {
+            var posts = await _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.Tags)
+                .Where(p => p.Tags.Any(t => t.TagName == tag))
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
 
-        //public IActionResult Profile()
-        //{
-        //    return View();
-        //}
+            ViewData["Tag"] = tag;
+            return View(posts);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

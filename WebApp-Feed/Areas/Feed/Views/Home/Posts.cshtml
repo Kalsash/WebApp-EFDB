@@ -1,0 +1,16 @@
+﻿@model List<WebApp_Feed.Models.Post>
+
+<h2 class="text-2xl font-bold mb-4">List of Posts for Tag #@ViewData["Tag"]:</h2>
+
+@foreach (var post in Model)
+{
+    <div class="bg-white shadow p-4 mb-4 rounded-lg">
+        <div class="flex space-x-3">
+            <img src="@post.User.AvatarUrl" class="w-10 h-10 rounded-full" />
+            <div>
+                <p class="font-semibold">@post.User.DisplayName</p>
+                <p class="text-gray-600">@Html.Raw(post.ContentWithLinks)</p>
+            </div>
+        </div>
+    </div>
+}

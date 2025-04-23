@@ -1,11 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using WebApp_Feed.Areas.Feed.Models;
 
 namespace WebApp_Feed.Models;
 
 public partial class Post :IFeedItem
 {
+    public static List<string> ExtractHashtags(string postContent)
+    {
+        var regex = new Regex(@"#\w+");
+        return regex.Matches(postContent)
+                    .Cast<Match>()
+                    .Select(m => m.Value.TrimStart('#'))
+                    .Distinct()
+                    .ToList();
+    }
+
+    public string ContentWithLinks
+    {
+        get
+        {
+            return Regex.Replace(Content, @"#(\w+)",
+                "<a href='/Ponds/Posts/$1'>#$1</a>");
+        }
+    }
     public long PostId { get; set; }
 
     public long UserId { get; set; }
