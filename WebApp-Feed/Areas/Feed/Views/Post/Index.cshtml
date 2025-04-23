@@ -53,10 +53,6 @@
                 </div>
                 <p class="mt-2 text-swamp-700">
                     @Model.Content
-                    @foreach (var tag in Model.Tags)
-                    {
-                        <a href="#" class="text-swamp-700 hover:text-swamp-500">#@tag.TagName</a>
-                    }
                 </p>
 
                 @if (!string.IsNullOrEmpty(Model.MediaUrl))
