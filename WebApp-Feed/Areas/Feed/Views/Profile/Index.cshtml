@@ -209,8 +209,11 @@
 
             <!-- Post Feed -->
             <div class="space-y-6">
+
                 @foreach (var post in Model.Posts.OrderByDescending(p => ConvertByteArrayToDateTime(p.CreatedAt)))
                 {
+                    if (post.PostType != "reply") // Проверяем тип поста
+                    {
                     <div class="bg-white shadow-sm p-6">
                         <div class="flex items-start space-x-3">
                             <img src="@Model.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
@@ -259,6 +262,7 @@
                             </div>
                         </div>
                     </div>
+                    }
                 }
             </div>
         </div>

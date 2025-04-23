@@ -80,12 +80,16 @@
                         </svg>
                         <span>@Model.Interactions.Count(i => i.InteractionType == "comment") Answers</span>
                     </button>
-                    <button class="flex items-center space-x-2 hover:text-swamp-600">
+                    <button class="flex items-center space-x-2 hover:text-swamp-600" form="reribbForm" type="submit">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <!-- ... иконка репостов ... -->
                         </svg>
                         <span>@Model.Interactions.Count(i => i.InteractionType == "reribb") Reribbs</span>
                     </button>
+
+                    <form id="reribbForm" asp-action="Reribb" asp-controller="Post" method="post">
+                        <input type="hidden" name="postId" value="@Model.PostId" />
+                    </form>
                 </div>
             </div>
         </div>

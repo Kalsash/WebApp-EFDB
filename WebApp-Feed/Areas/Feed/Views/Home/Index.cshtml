@@ -65,16 +65,16 @@
                             <img src="@Model.CurrentUser?.User?.AvatarUrl" class="w-10 h-10 rounded-full">
 
                             <a asp-area="Feed"
-                               asp-controller="Profile"
-                               asp-action="Index"
-                               asp-route-username="@Model.CurrentUser?.UserName"
-                               class="font-medium text-swamp-600 hover:text-swamp-800">
+                            asp-controller="Profile"
+                            asp-action="Index"
+                            asp-route-username="@Model.CurrentUser?.UserName"
+                            class="font-medium text-swamp-600 hover:text-swamp-800">
                                 @Model.CurrentUser?.UserName
                             </a>
                         </div>
 
                         <a asp-area="Feed" asp-controller="Account" asp-action="Logout"
-                           class="block bg-swamp-500 text-white text-center py-2 rounded-full hover:bg-swamp-600">
+                        class="block bg-swamp-500 text-white text-center py-2 rounded-full hover:bg-swamp-600">
                             Logout
                         </a>
                     </div>
@@ -106,9 +106,11 @@
                 @switch (item)
                 {
                     case Post post:
-                        <!-- Post Section -->
-                        <div class="bg-white shadow-sm p-6 mb-4">
-                            <div class="flex items-start space-x-3">
+                        if (post.PostType != "reply") // Проверяем тип поста
+                        {
+                            <!-- Post Section -->
+                            <div class="bg-white shadow-sm p-6 mb-4">
+                                <div class="flex items-start space-x-3">
                                 <a href="/feed/post/@post.PostId">
                                     <img src="@post.User.AvatarUrl" alt="User" class="w-16 h-16 rounded-full">
                                 </a>
@@ -125,6 +127,7 @@
                                 </div>
                             </div>
                         </div>
+                        }
                         break;
 
                     case Event eventItem:
