@@ -36,7 +36,7 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             var post = new Post
             {
                 Content = content,
-                CreatedAt = BitConverter.GetBytes(DateTime.UtcNow.ToBinary()),
+                CreatedAt = BitConverter.GetBytes(DateTime.Now.ToBinary()),
                 PostType = "post",
                 UserId = user.Id,
                 Tags = new List<Tag>() // Инициализация списка тегов
