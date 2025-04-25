@@ -18,6 +18,8 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             _userManager = userManager;
         }
 
+
+
         [Route("feed/post/{postId}")]
         public IActionResult Index(long postId)
         {
@@ -37,6 +39,20 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             }
 
             return View(post);
+        }
+
+
+        // GET: /feed/postadd
+        [HttpGet]
+        [Route("/feed/postadd")]
+        public async Task<IActionResult> PostAdd()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            return View();
         }
 
         // POST: /feed/addreply

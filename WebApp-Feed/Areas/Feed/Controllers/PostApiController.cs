@@ -32,23 +32,58 @@ namespace WebApp_Feed.Areas.Feed.Controllers
             if (user == null)
                 return Unauthorized();
 
+            // Создаем новый пост
             var post = new Post
             {
                 Content = content,
                 CreatedAt = BitConverter.GetBytes(DateTime.UtcNow.ToBinary()),
                 PostType = "post",
-                UserId = user.Id
+                UserId = user.Id,
+                Tags = new List<Tag>() // Инициализация списка тегов
             };
 
+            // Извлекаем хэштеги из содержимого поста
+            var hashtags = WebApp_Feed.Models.Post.ExtractHashtags(content);
+
+            // Обрабатываем каждый хэштег
+            foreach (var tagName in hashtags)
+            {
+                // Добавляем тег и связываем его с постом
+                var tag = AddTag(tagName);
+                post.Tags.Add(tag); // Добавляем тег в список тегов поста
+            }
+
+            // Добавляем пост в контекст
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return Ok(new
+            return Ok("Пост добавлен");
+        }
+
+        private Tag AddTag(string tagName)
+        {
+            var existingTag = _context.Tags
+                .FirstOrDefault(t => t.TagName.ToLower() == tagName.ToLower());
+
+            if (existingTag != null)
             {
-                message = "Пост успешно добавлен",
-                postId = post.PostId,
-                content = post.Content
-            });
+                // Если тег существует, увеличиваем счетчик использования
+                existingTag.UsageCount++;
+                return existingTag; // Возвращаем существующий тег
+            }
+            else
+            {
+                // Если тег не существует, создаем новый
+                var newTag = new Tag
+                {
+                    TagName = tagName,
+                    CreatedAt = BitConverter.GetBytes(DateTime.UtcNow.Ticks),
+                    UsageCount = 1
+                };
+
+                _context.Tags.Add(newTag);
+                return newTag; // Возвращаем новый тег
+            }
         }
     }
 }

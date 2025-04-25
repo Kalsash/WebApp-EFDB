@@ -368,7 +368,7 @@
             const content = document.getElementById('postContent').value;
 
             try {
-                const response = await fetch('/feed/postadd', {
+                const response = await fetch('/api/feed/postapi', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
