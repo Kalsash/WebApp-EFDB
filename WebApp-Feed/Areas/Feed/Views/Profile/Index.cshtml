@@ -188,7 +188,13 @@
 
                     <!-- Stats -->
                     <div class="mt-4 flex gap-6 text-swamp-700">
-                        <div><span class="text-swamp-400 font-medium">@Model.Posts.Count</span> Posts</div>
+                        @{
+                            var filteredPosts = Model.Posts.Where(post => post.PostType != "reply").ToList();
+                        }
+
+                        <div>
+                            <span class="text-swamp-400 font-medium">@filteredPosts.Count</span> Posts
+                        </div>
                         <div><span class="text-swamp-400 font-medium">@Model.Interactions.Count</span> Interactions</div>
                     </div>
 
@@ -225,11 +231,11 @@
                                     <a asp-area="Feed" asp-controller="Profile" class="text-sm text-swamp-500 hover:text-swamp-700">Posted @GetTimeAgo(ConvertByteArrayToDateTime(@post.CreatedAt))</a>
                                 </div>
                                 <p class="mt-2 text-swamp-700">
-                                    @post.Content
-                                    @foreach (var tag in post.Tags)
+                                        @Html.Raw(@post.ContentWithLinks)
+                        @*             @foreach (var tag in post.Tags)
                                     {
                                         <span class="text-swamp-700 hover:text-swamp-500">#@tag.TagName</span>
-                                    }
+                                    } *@
                                 </p>
                                 @if (!string.IsNullOrEmpty(post.MediaUrl))
                                 {
